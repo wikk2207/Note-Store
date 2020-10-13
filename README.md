@@ -7,3 +7,4 @@
 - Husky
 - VS Code
 - Git
+- Styled Components
