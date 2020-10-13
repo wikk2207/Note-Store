@@ -5,15 +5,15 @@
 - ESlint
   ![ESlint logo](https://github.com/wikk2207/Fav-Note/blob/styled-components/public/eslint.png)
 - Prettier
-  ![Prettier logo](/public/readme/prettier.png)
+  ![Prettier logo](https://github.com/wikk2207/Fav-Note/blob/styled-components/public/prettier.png)
 - Husky
 - VS Code
-  ![VS Code logo](/public/readme/vscode.png)
+  ![VS Code logo](https://github.com/wikk2207/Fav-Note/blob/styled-components/public/vscode.png)
 - Git
-  ![Git logo](/public/readme/git.png)
+  ![Git logo](https://github.com/wikk2207/Fav-Note/blob/styled-components/public/git.png)
 - Github
-  ![Github logo](/public/readme/github.png)
+  ![Github logo](https://github.com/wikk2207/Fav-Note/blob/styled-components/public/github.png)
 - Styled Components
-  ![Styled Components logo](/public/readme/styled-components.png)
+  ![Styled Components logo](https://github.com/wikk2207/Fav-Note/blob/styled-components/public/styled-components.png)
 - Storybook
-  ![Storybook logo](/public/readme/storybook.png)
+  ![Storybook logo](https://github.com/wikk2207/Fav-Note/blob/styled-components/public/storybook.png)
