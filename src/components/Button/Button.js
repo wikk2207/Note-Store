@@ -2,7 +2,7 @@ import styled, { css } from 'styled-components';
 
 // secondary is descructed from props
 const Button = styled.button`
-  background-color: #ffd82b;
+  background-color: ${({ color }) => color || '#ffd82b'};
   width: ${({ width }) => width || '220px'};
   height: 47px;
   border: none;

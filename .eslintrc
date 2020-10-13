@@ -21,7 +21,8 @@
                 "variables": true
             }
         ],
-        "no-param-reassign": "off"
+        "no-param-reassign": "off",
+        "import/no-extraeous-dependencies": 0
     },
     "settings": {
         "import/resolver": {
