@@ -3,14 +3,14 @@
 ## Tools
 
 <ul>
-  <li>ESlint <img src="https://github.com/wikk2207/Fav-Note/blob/develop/public/eslint.png" height="30"> </li>
-  <li>Prettier <img src="https://github.com/wikk2207/Fav-Note/blob/develop/public/prettier.png" height="30"> </li>
+  <li>ESlint <img src="./public/readme/eslint.png" height="30"> </li>
+  <li>Prettier <img src="./public/readme/prettier.png" height="30"> </li>
   <li>Husky </li>
-  <li>VS Code <img src="https://github.com/wikk2207/Fav-Note/blob/develop/public/vscode.png" height="30"> </li>
-  <li>Git <img src="https://github.com/wikk2207/Fav-Note/blob/develop/public/git.png" height="30"> </li>
-  <li>Github <img src="https://github.com/wikk2207/Fav-Note/blob/develop/public/github.png" height="30"> </li>
-  <li>Styled Components <img src="https://github.com/wikk2207/Fav-Note/blob/develop/public/styled-components.png" height="30"> </li>
-  <li>Storybook <img src="https://github.com/wikk2207/Fav-Note/blob/develop/public/storybook.png" height="30"> </li>
+  <li>VS Code <img src="./public/readme/vscode.png" height="30"> </li>
+  <li>Git <img src="./public/readme/git.png" height="30"> </li>
+  <li>Github <img src="./public/readme/github.png" height="30"> </li>
+  <li>Styled Components <img src="./public/readme/styled-components.png" height="30"> </li>
+  <li>Storybook <img src="./public/readme/storybook.png" height="30"> </li>
 </ul>
 
 ## Good practices

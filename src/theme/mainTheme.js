@@ -6,5 +6,12 @@ export const theme = {
   grey200: 'hsl(0, 0%, 90%)',
   black: 'hsl(0, 0%, 0%)',
   light: 300,
+  regular: 450,
   bold: 600,
+  fontSize: {
+    xs: '10px',
+    s: '14px',
+    l: '16px',
+    xl: '20px',
+  },
 };
