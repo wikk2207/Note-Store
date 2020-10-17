@@ -17,7 +17,7 @@ const YellowBackground = styled.div`
 `;
 
 export default {
-  title: 'Components/ButtonIcon',
+  title: 'Components/Atoms/ButtonIcon',
   component: ButtonIcon,
 };
 
