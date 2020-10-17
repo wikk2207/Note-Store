@@ -73,25 +73,18 @@ const StyledLinkButton = styled.a`
   top: 25px;
 `;
 
-const Card = ({ cardType }) => (
+const Card = ({ cardType, title, created, twitterName, articleUrl, content }) => (
   <StyledWrapper>
     <InnerWrapper activeColor={cardType}>
-      <StyledHeading>Hello Wiksa</StyledHeading>
-      <DateInfo>3 days</DateInfo>
+      <StyledHeading>{title}</StyledHeading>
+      <DateInfo>{created}</DateInfo>
       {cardType === CARD_TYPE.twitter && (
-        <StyledAvatar src="https://unavatar.now.sh/twitter/hello_roman" />
+        <StyledAvatar src={`https://unavatar.now.sh/twitter/${twitterName}`} />
       )}
-      {cardType === CARD_TYPE.article && (
-        <StyledLinkButton src="https://reactjs.org/docs/typechecking-with-proptypes.html" />
-      )}
+      {cardType === CARD_TYPE.article && <StyledLinkButton src={articleUrl} />}
     </InnerWrapper>
     <InnerWrapper flex>
-      <Paragraph>
-        Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has
-        been the industry standard dummy text ever since the 1500s, when an unknown printer took a
-        galley of type and scrambled it to make a type specimen book. It has survived not only five
-        centuries.
-      </Paragraph>
+      <Paragraph>{content}</Paragraph>
       <Button secondary>remove</Button>
     </InnerWrapper>
   </StyledWrapper>
@@ -99,10 +92,17 @@ const Card = ({ cardType }) => (
 
 Card.propTypes = {
   cardType: PropTypes.oneOf(['note', 'twitter', 'article']),
+  title: PropTypes.string.isRequired,
+  created: PropTypes.string.isRequired,
+  twitterName: PropTypes.string,
+  articleUrl: PropTypes.string,
+  content: PropTypes.string.isRequired,
 };
 
 Card.defaultProps = {
   cardType: CARD_TYPE.note,
+  twitterName: null,
+  articleUrl: null,
 };
 
 export default Card;
