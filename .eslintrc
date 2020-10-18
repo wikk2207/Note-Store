@@ -4,6 +4,7 @@
         "prettier",
         "react-app"
     ],
+    "parser": "babel-eslint",
     "rules": {
         "react/jsx-filename-extension": [
             1,

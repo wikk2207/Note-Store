@@ -8,6 +8,7 @@ import logoutIcon from 'assets/icons/logout.svg';
 import penIcon from 'assets/icons/pen.svg';
 import twitterIcon from 'assets/icons/twitter.svg';
 import logoIcon from 'assets/icons/logo.svg';
+import { routes } from 'routes';
 
 const StyledWrapper = styled.nav`
   position: fixed;
@@ -47,28 +48,28 @@ const StyledLinksList = styled.ul`
 
 const Sidebar = ({ pageType }) => (
   <StyledWrapper activeColor={pageType}>
-    <StyledLogoLink to="/" />
+    <StyledLogoLink to={routes.home} />
     <StyledLinksList>
       <li>
-        <ButtonIcon exact as={NavLink} to="/notes" icon={penIcon} activeclass="active" />
+        <ButtonIcon as={NavLink} to={routes.notes} icon={penIcon} activeclass="active" />
       </li>
       <li>
-        <ButtonIcon as={NavLink} to="/twitters" icon={twitterIcon} activeclass="active" />
+        <ButtonIcon as={NavLink} to={routes.twitters} icon={twitterIcon} activeclass="active" />
       </li>
       <li>
-        <ButtonIcon as={NavLink} to="/articles" icon={bulbIcon} activeclass="active" />
+        <ButtonIcon as={NavLink} to={routes.articles} icon={bulbIcon} activeclass="active" />
       </li>
     </StyledLinksList>
-    <StyledLogoutButton as={NavLink} to="/login" icon={logoutIcon} />
+    <StyledLogoutButton as={NavLink} to={routes.login} icon={logoutIcon} />
   </StyledWrapper>
 );
 
 Sidebar.propTypes = {
-  pageType: PropTypes.oneOf(['note', 'twitter', 'article']),
+  pageType: PropTypes.oneOf(['notes', 'twitters', 'articles']),
 };
 
 Sidebar.defaultProps = {
-  pageType: 'note',
+  pageType: 'notes',
 };
 
 export default Sidebar;
