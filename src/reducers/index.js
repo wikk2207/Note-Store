@@ -28,7 +28,7 @@ const initialState = {
       twitterName: 'mjackson',
     },
     {
-      id: 3,
+      id: 4,
       cardType: 'twitters',
       title: 'Super animacje!',
       content:
@@ -112,7 +112,17 @@ const initialState = {
 };
 
 const rootReducer = (state = initialState, action) => {
-  return state;
+  switch (action.type) {
+    case 'REMOVE_ITEM':
+      return {
+        ...state,
+        [action.payload.itemType]: [
+          ...state[action.payload.itemType].filter((item) => item.id !== action.payload.id),
+        ],
+      };
+    default:
+      return state;
+  }
 };
 
 export default rootReducer;
