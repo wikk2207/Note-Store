@@ -20,6 +20,8 @@ const StyledWrapper = styled.div`
   padding: 100px 90px;
   border-left: 10px solid ${({ activeColor, theme }) => theme[activeColor]};
   box-shadow: -5px 0 15px rgba(0, 0, 0, 0.1);
+  transform: translate(${({ isVisible }) => (isVisible ? '0' : '100%')});
+  transition: transform 0.25s ease-in-out;
 `;
 
 const StyledTextArea = styled(Input)`
@@ -28,11 +30,19 @@ const StyledTextArea = styled(Input)`
   height: 30vh;
 `;
 
-const NewItemBar = ({ pageContext }) => (
-  <StyledWrapper activeColor={pageContext}>
+const StyledInput = styled(Input)`
+  margin-top: 25px;
+`;
+
+const NewItemBar = ({ pageContext, isVisible }) => (
+  <StyledWrapper isVisible={isVisible} activeColor={pageContext}>
     <Heading>{`Create new ${pageContext}`}</Heading>
     <Paragraph>A note requires title and desription</Paragraph>
-    <Input placeholder="title" />
+    <StyledInput
+      placeholder={pageContext === 'twitters' ? 'Account Name eg. hello_roman' : 'Title'}
+    />
+    {pageContext === 'articles' && <StyledInput placeholder="link" />}
+
     <StyledTextArea as="textarea" placeholder="desciption" />
     <Button>add note</Button>
   </StyledWrapper>
@@ -40,6 +50,7 @@ const NewItemBar = ({ pageContext }) => (
 
 NewItemBar.propTypes = {
   pageContext: PropTypes.oneOf(['notes', 'twitters', 'articles']),
+  isVisible: PropTypes.bool.isRequired,
 };
 
 NewItemBar.defaultProps = {

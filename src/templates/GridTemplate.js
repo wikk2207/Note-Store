@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import withContext from 'hoc/withContext';
@@ -48,22 +48,43 @@ const StyledButtonIcon = styled(ButtonIcon)`
   z-index: 10000;
 `;
 
-const GridTemplate = ({ children, pageContext }) => (
-  <UserPageTemplate pageType={pageContext}>
-    <StyledWrapper>
-      <StyledPageHeader>
-        <Input search placeholder="Search" />
-        <StyledHeading big as="h1">
-          {pageContext}
-        </StyledHeading>
-        <StyledParagraph>{`6 ${pageContext}`}</StyledParagraph>
-      </StyledPageHeader>
-      <StyledGrid>{children}</StyledGrid>
-      <StyledButtonIcon icon={plusIcon} activeColor={pageContext} />
-      <NewItemBar />
-    </StyledWrapper>
-  </UserPageTemplate>
-);
+class GridTemplate extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      isNewItemBarVisible: false,
+    };
+  }
+
+  handleNewItemBarToggle = () => {
+    this.setState((prevState) => ({ isNewItemBarVisible: !prevState.isNewItemBarVisible }));
+  };
+
+  render() {
+    const { children, pageContext } = this.props;
+    const { isNewItemBarVisible } = this.state;
+    return (
+      <UserPageTemplate pageType={pageContext}>
+        <StyledWrapper>
+          <StyledPageHeader>
+            <Input search placeholder="Search" />
+            <StyledHeading big as="h1">
+              {pageContext}
+            </StyledHeading>
+            <StyledParagraph>{`6 ${pageContext}`}</StyledParagraph>
+          </StyledPageHeader>
+          <StyledGrid>{children}</StyledGrid>
+          <StyledButtonIcon
+            onClick={this.handleNewItemBarToggle}
+            icon={plusIcon}
+            activeColor={pageContext}
+          />
+          <NewItemBar isVisible={isNewItemBarVisible} />
+        </StyledWrapper>
+      </UserPageTemplate>
+    );
+  }
+}
 
 GridTemplate.propTypes = {
   children: PropTypes.arrayOf(PropTypes.object).isRequired,
