@@ -1,11 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
+import { connect } from 'react-redux';
 import Input from 'components/atoms/Input/Input';
 import Button from 'components/atoms/Button/Button';
 import Heading from 'components/atoms/Heading/Heading';
 import Paragraph from 'components/atoms/Paragraph/Paragraph';
 import withContext from 'hoc/withContext';
+import { addItem as addItemAction } from 'actions';
 
 const StyledWrapper = styled.div`
   position: fixed;
@@ -34,27 +36,40 @@ const StyledInput = styled(Input)`
   margin-top: 25px;
 `;
 
-const NewItemBar = ({ pageContext, isVisible }) => (
+const NewItemBar = ({ pageContext, isVisible, addItem }) => (
   <StyledWrapper isVisible={isVisible} activeColor={pageContext}>
     <Heading>{`Create new ${pageContext}`}</Heading>
     <Paragraph>A note requires title and desription</Paragraph>
-    <StyledInput
-      placeholder={pageContext === 'twitters' ? 'Account Name eg. hello_roman' : 'Title'}
-    />
+    <StyledInput placeholder="Title" />
     {pageContext === 'articles' && <StyledInput placeholder="link" />}
+    {pageContext === 'twitters' && <StyledInput placeholder="Account Name eg. hello_roman" />}
 
     <StyledTextArea as="textarea" placeholder="desciption" />
-    <Button>add note</Button>
+    <Button
+      onClick={() =>
+        addItem(pageContext, {
+          title: 'You gave React a bad name',
+          content:
+            'Lorem ipsum dolor sit amet consectetur adipisicing elit. Delectus, tempora quibusdam natus modi tempore esse adipisci, dolore odit animi',
+        })}
+    >
+      add note
+    </Button>
   </StyledWrapper>
 );
 
 NewItemBar.propTypes = {
   pageContext: PropTypes.oneOf(['notes', 'twitters', 'articles']),
   isVisible: PropTypes.bool.isRequired,
+  addItem: PropTypes.func.isRequired,
 };
 
 NewItemBar.defaultProps = {
   pageContext: 'notes',
 };
 
-export default withContext(NewItemBar);
+const mapDispatchToProps = (dispatch) => ({
+  addItem: (itemType, itemContent) => dispatch(addItemAction(itemType, itemContent)),
+});
+
+export default connect(null, mapDispatchToProps)(withContext(NewItemBar));

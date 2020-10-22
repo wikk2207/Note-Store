@@ -2,7 +2,6 @@ const initialState = {
   twitters: [
     {
       id: 1,
-      cardType: 'twitters',
       title: 'Hello Roman',
       content:
         'Lorem ipsum dolor sit amet consectetur adipisicing elit. Delectus, tempora quibusdam natus modi tempore esse adipisci, dolore odit animi',
@@ -11,7 +10,6 @@ const initialState = {
     },
     {
       id: 2,
-      cardType: 'twitters',
       title: 'Redux guy',
       content:
         'Lorem ipsum dolor sit amet consectetur adipisicing elit. Delectus, tempora quibusdam natus modi tempore esse adipisci, dolore odit animi',
@@ -20,7 +18,6 @@ const initialState = {
     },
     {
       id: 3,
-      cardType: 'twitters',
       title: 'React router stuff',
       content:
         'Lorem ipsum dolor sit amet consectetur adipisicing elit. Delectus, tempora quibusdam natus modi tempore esse adipisci, dolore odit animi',
@@ -29,7 +26,6 @@ const initialState = {
     },
     {
       id: 4,
-      cardType: 'twitters',
       title: 'Super animacje!',
       content:
         'Lorem ipsum dolor sit amet consectetur adipisicing elit. Delectus, tempora quibusdam natus modi tempore esse adipisci, dolore odit animi',
@@ -40,7 +36,6 @@ const initialState = {
   notes: [
     {
       id: 1,
-      cardType: 'notes',
       title: 'Wake me up when Vue ends',
       content:
         'Lorem ipsum dolor sit amet consectetur adipisicing elit. Delectus, tempora quibusdam natus modi tempore esse adipisci, dolore odit animi',
@@ -48,7 +43,6 @@ const initialState = {
     },
     {
       id: 2,
-      cardType: 'notes',
       title: 'Como es An Gular?',
       content:
         'Lorem ipsum dolor sit amet consectetur adipisicing elit. Delectus, tempora quibusdam natus modi tempore esse adipisci, dolore odit animi',
@@ -56,7 +50,6 @@ const initialState = {
     },
     {
       id: 3,
-      cardType: 'notes',
       title: 'Du bist Reactish',
       content:
         'Lorem ipsum dolor sit amet consectetur adipisicing elit. Delectus, tempora quibusdam natus modi tempore esse adipisci, dolore odit animi',
@@ -64,7 +57,6 @@ const initialState = {
     },
     {
       id: 4,
-      cardType: 'notes',
       title: 'Reactuj się kto moze!',
       content:
         'Lorem ipsum dolor sit amet consectetur adipisicing elit. Delectus, tempora quibusdam natus modi tempore esse adipisci, dolore odit animi',
@@ -83,7 +75,6 @@ const initialState = {
     },
     {
       id: 2,
-      cardType: 'articles',
       title: 'Wish you React',
       content:
         'Lorem ipsum dolor sit amet consectetur adipisicing elit. Delectus, tempora quibusdam natus modi tempore esse adipisci, dolore odit animi',
@@ -92,7 +83,6 @@ const initialState = {
     },
     {
       id: 3,
-      cardType: 'articles',
       title: 'You gave React a bad name',
       content:
         'Lorem ipsum dolor sit amet consectetur adipisicing elit. Delectus, tempora quibusdam natus modi tempore esse adipisci, dolore odit animi',
@@ -101,7 +91,6 @@ const initialState = {
     },
     {
       id: 4,
-      cardType: 'articles',
       title: 'Is it React you looking for?',
       content:
         'Lorem ipsum dolor sit amet consectetur adipisicing elit. Delectus, tempora quibusdam natus modi tempore esse adipisci, dolore odit animi',
@@ -113,6 +102,11 @@ const initialState = {
 
 const rootReducer = (state = initialState, action) => {
   switch (action.type) {
+    case 'ADD_ITEM':
+      return {
+        ...state,
+        [action.payload.itemType]: [...state[action.payload.itemType], action.payload.item],
+      };
     case 'REMOVE_ITEM':
       return {
         ...state,
