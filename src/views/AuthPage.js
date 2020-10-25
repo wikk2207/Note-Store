@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Link } from 'react-router-dom';
+import { Link, Redirect } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { Formik, Form } from 'formik';
@@ -64,7 +64,7 @@ class AuthPage extends Component {
 
   render() {
     const { authType } = this.state;
-    const { authenticate } = this.props;
+    const { userID, authenticate } = this.props;
 
     return (
       <AuthTemplate>
@@ -74,37 +74,42 @@ class AuthPage extends Component {
             authenticate(username, password);
           }}
         >
-          {({ handleChange, handleBlur, values }) => (
-            <>
-              <Heading>{authType === 'login' ? 'Sign in' : 'Register'}</Heading>
-              <StyledForm>
-                <StyledInput
-                  type="text"
-                  name="username"
-                  placeholder="Login"
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  value={values.title}
-                />
-                <StyledInput
-                  type="password"
-                  name="password"
-                  placeholder="Password"
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  value={values.title}
-                />
-                <Button activecolor="notes" type="submit">
-                  {authType === 'login' ? 'sign in' : 'register'}
-                </Button>
-              </StyledForm>
-              {authType === 'login' ? (
-                <StyledLink to={routes.register}>I want my account!</StyledLink>
-              ) : (
-                <StyledLink to={routes.login}>I want to log in!</StyledLink>
-              )}
-            </>
-          )}
+          {({ handleChange, handleBlur, values }) => {
+            if (userID) {
+              return <Redirect to={routes.home} />;
+            }
+            return (
+              <>
+                <Heading>{authType === 'login' ? 'Sign in' : 'Register'}</Heading>
+                <StyledForm>
+                  <StyledInput
+                    type="text"
+                    name="username"
+                    placeholder="Login"
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    value={values.title}
+                  />
+                  <StyledInput
+                    type="password"
+                    name="password"
+                    placeholder="Password"
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    value={values.title}
+                  />
+                  <Button activecolor="notes" type="submit">
+                    {authType === 'login' ? 'sign in' : 'register'}
+                  </Button>
+                </StyledForm>
+                {authType === 'login' ? (
+                  <StyledLink to={routes.register}>I want my account!</StyledLink>
+                ) : (
+                  <StyledLink to={routes.login}>I want to log in!</StyledLink>
+                )}
+              </>
+            );
+          }}
         </Formik>
       </AuthTemplate>
     );
@@ -116,10 +121,17 @@ AuthPage.propTypes = {
     pathname: PropTypes.string.isRequired,
   }).isRequired,
   authenticate: PropTypes.func.isRequired,
+  userID: PropTypes.string,
 };
+
+AuthPage.defaultProps = {
+  userID: null,
+};
+
+const mapStateToProps = ({ userID = null }) => ({ userID });
 
 const mapDispatchToProps = (dispatch) => ({
   authenticate: (username, password) => dispatch(authenticateAction(username, password)),
 });
 
-export default connect(null, mapDispatchToProps)(AuthPage);
+export default connect(mapStateToProps, mapDispatchToProps)(AuthPage);
