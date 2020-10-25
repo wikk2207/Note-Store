@@ -8,12 +8,15 @@ import Twitters from 'views/Twitters';
 import DetailsPage from 'views/DetailsPage';
 import { routes } from 'routes';
 import store from 'store';
+import AuthPage from 'views/AuthPage';
 
 const Root = () => (
   <Provider store={store}>
     <BrowserRouter>
       <MainTemplate>
         <Switch>
+          <Route exact path={routes.login} component={AuthPage} />
+          <Route exact path={routes.register} component={AuthPage} />
           <Route exact path={routes.home} render={() => <Redirect to={routes.notes} />} />
           <Route exact path={routes.notes} component={Notes} />
           <Route path={routes.note} component={DetailsPage} />
