@@ -1,13 +1,15 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import { Link } from 'react-router-dom';
+import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { Formik, Form } from 'formik';
+import { routes } from 'routes';
 import AuthTemplate from 'templates/AuthTemplate';
-import Heading from 'components/atoms/Heading/Heading';
 import Input from 'components/atoms/Input/Input';
 import Button from 'components/atoms/Button/Button';
-import { Link } from 'react-router-dom';
-import { routes } from 'routes';
-import PropTypes from 'prop-types';
+import Heading from 'components/atoms/Heading/Heading';
+import { authenticate as authenticateAction } from 'actions';
 
 const StyledForm = styled(Form)`
   display: flex;
@@ -62,13 +64,14 @@ class AuthPage extends Component {
 
   render() {
     const { authType } = this.state;
+    const { authenticate } = this.props;
 
     return (
       <AuthTemplate>
         <Formik
           initialValues={{ username: '', password: '' }}
           onSubmit={({ username, password }) => {
-            console.log('hello');
+            authenticate(username, password);
           }}
         >
           {({ handleChange, handleBlur, values }) => (
@@ -112,6 +115,11 @@ AuthPage.propTypes = {
   location: PropTypes.shape({
     pathname: PropTypes.string.isRequired,
   }).isRequired,
+  authenticate: PropTypes.func.isRequired,
 };
 
-export default AuthPage;
+const mapDispatchToProps = (dispatch) => ({
+  authenticate: (username, password) => dispatch(authenticateAction(username, password)),
+});
+
+export default connect(null, mapDispatchToProps)(AuthPage);
