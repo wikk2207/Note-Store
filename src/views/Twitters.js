@@ -15,14 +15,14 @@ class Twitters extends Component {
     const { twitters } = this.props;
     return (
       <GridTemplate pageType="twitters">
-        {twitters.map(({ title, content, twitterName, created, _id }) => (
+        {twitters.map(({ title, content, twitterName, created, _id: id }) => (
           <Card
-            id={_id}
+            id={id}
             title={title}
             content={content}
             twitterName={twitterName}
             created={created}
-            key={_id}
+            key={id}
           />
         ))}
       </GridTemplate>

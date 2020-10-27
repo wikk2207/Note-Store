@@ -15,8 +15,8 @@ class Notes extends Component {
     const { notes } = this.props;
     return (
       <GridTemplate pageType="notes">
-        {notes.map(({ title, content, created, _id }) => (
-          <Card id={_id} title={title} content={content} created={created} key={_id} />
+        {notes.map(({ title, content, created, _id: id }) => (
+          <Card id={id} title={title} content={content} created={created} key={id} />
         ))}
       </GridTemplate>
     );

@@ -15,14 +15,14 @@ class Articles extends Component {
     const { articles } = this.props;
     return (
       <GridTemplate pageType="articles">
-        {articles.map(({ title, content, articleUrl, created, _id }) => (
+        {articles.map(({ title, content, articleUrl, created, _id: id }) => (
           <Card
-            id={_id}
+            id={id}
             title={title}
             content={content}
             articleUrl={articleUrl}
             created={created}
-            key={_id}
+            key={id}
           />
         ))}
       </GridTemplate>

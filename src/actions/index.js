@@ -19,7 +19,6 @@ export const authenticate = (username, password) => (dispatch) => {
       password,
     })
     .then((payload) => {
-      console.log(payload);
       dispatch({ type: AUTH_SUCCESS, payload });
     })
     .catch((err) => {
@@ -39,7 +38,6 @@ export const fetchItems = (itemType) => (dispatch, getState) => {
       },
     })
     .then(({ data }) => {
-      console.log(data);
       dispatch({
         type: FETCH_SUCCESS,
         payload: {
