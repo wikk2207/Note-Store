@@ -1,36 +1,61 @@
-import React from 'react';
+import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import GridTemplate from 'templates/GridTemplate';
 import Card from 'components/molecules/Card/Card';
+import { fetchItems } from 'actions';
 
-const Twitters = ({ twitters }) => (
-  <GridTemplate pageType="twitters">
-    {twitters.map(({ title, content, twitterName, created, id }) => (
-      <Card
-        id={id}
-        title={title}
-        content={content}
-        twitterName={twitterName}
-        created={created}
-        key={id}
-      />
-    ))}
-  </GridTemplate>
-);
+class Twitters extends Component {
+  componentDidMount() {
+    const { fetchTwitters } = this.props;
+    fetchTwitters();
+  }
+
+  render() {
+    const { twitters } = this.props;
+    return (
+      <GridTemplate pageType="twitters">
+        {twitters.map(({ title, content, twitterName, created, _id }) => (
+          <Card
+            id={_id}
+            title={title}
+            content={content}
+            twitterName={twitterName}
+            created={created}
+            key={_id}
+          />
+        ))}
+      </GridTemplate>
+    );
+  }
+}
 
 Twitters.propTypes = {
   twitters: PropTypes.arrayOf(
     PropTypes.shape({
-      id: PropTypes.number.isRequired,
+      _id: PropTypes.string.isRequired,
       title: PropTypes.string.isRequired,
       content: PropTypes.string.isRequired,
       twitterName: PropTypes.string.isRequired,
       created: PropTypes.string.isRequired,
     }),
-  ).isRequired,
+  ),
+  fetchTwitters: PropTypes.func.isRequired,
 };
 
-const mapStateToProps = ({ twitters }) => ({ twitters });
+Twitters.defaultProps = {
+  twitters: [],
+};
 
-export default connect(mapStateToProps)(Twitters);
+// const mapStateToProps = ({ twitters }) => ({ twitters });
+
+const mapStateToProps = (state) => {
+  const { twitters } = state;
+  return { twitters };
+};
+
+const mapDispatchToProps = (dispatch) => ({
+  fetchTwitters: () => dispatch(fetchItems('twitters')),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(Twitters);
