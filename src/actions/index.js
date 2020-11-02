@@ -3,7 +3,9 @@ import { apiPaths } from 'config/apiConfig';
 
 export const ADD_ITEM = 'ADD_ITEM';
 
-export const REMOVE_ITEM = 'REMOVE_ITEM';
+export const REMOVE_ITEM_REQUEST = 'REMOVE_ITEM_REQUEST';
+export const REMOVE_ITEM_SUCCESS = 'REMOVE_ITEM_SUCCESS';
+export const REMOVE_ITEM_FAILURE = 'REMOVE_ITEM_FAILURE';
 
 export const AUTH_REQUEST = 'AUTH_REQUEST';
 export const AUTH_SUCCESS = 'AUTH_SUCCESS';
@@ -54,14 +56,26 @@ export const fetchItems = (itemType) => (dispatch, getState) => {
     });
 };
 
-export const removeItem = (itemType, id) => {
-  return {
-    type: REMOVE_ITEM,
-    payload: {
-      itemType,
-      id,
-    },
-  };
+export const removeItem = (itemType, id) => (dispatch) => {
+  dispatch({ type: REMOVE_ITEM_REQUEST });
+
+  axios
+    .delete(`${apiPaths.removeItem}/${id}`)
+    .then(() => {
+      dispatch({
+        type: REMOVE_ITEM_SUCCESS,
+        payload: {
+          itemType,
+          id,
+        },
+      });
+    })
+    .catch((err) => {
+      console.log(err);
+      dispatch({
+        type: REMOVE_ITEM_FAILURE,
+      });
+    });
 };
 
 export const addItem = (itemType, itemContent) => {

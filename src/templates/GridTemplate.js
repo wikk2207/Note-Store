@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
+import { connect } from 'react-redux';
 import withContext from 'hoc/withContext';
 import plusIcon from 'assets/icons/plus.svg';
 import UserPageTemplate from 'templates/UserPageTemplate';
@@ -48,6 +49,25 @@ const StyledButtonIcon = styled(ButtonIcon)`
   z-index: 10000;
 `;
 
+const StyledLoadingIndicator = styled(Heading)`
+  font-size: 3em;
+  color: white;
+  position: fixed;
+  top: 40vh;
+  left: 40%;
+  z-index: 10001;
+  ::before {
+    content: '';
+    z-index: -1;
+    background-color: rgba(0, 0, 0, 0.5);
+    position: absolute;
+    width: 300vw;
+    height: 200vh;
+    top: -100vh;
+    left: -100vw;
+  }
+`;
+
 class GridTemplate extends Component {
   constructor(props) {
     super(props);
@@ -61,11 +81,12 @@ class GridTemplate extends Component {
   };
 
   render() {
-    const { children, pageContext } = this.props;
+    const { children, pageContext, isLoading } = this.props;
     const { isNewItemBarVisible } = this.state;
     return (
       <UserPageTemplate pageType={pageContext}>
         <StyledWrapper>
+          {isLoading && <StyledLoadingIndicator>Loading</StyledLoadingIndicator>}
           <StyledPageHeader>
             <Input search placeholder="Search" />
             <StyledHeading big as="h1">
@@ -89,10 +110,15 @@ class GridTemplate extends Component {
 GridTemplate.propTypes = {
   children: PropTypes.arrayOf(PropTypes.object).isRequired,
   pageContext: PropTypes.oneOf(['notes', 'twitters', 'articles']),
+  isLoading: PropTypes.bool.isRequired,
 };
 
 GridTemplate.defaultProps = {
   pageContext: 'notes',
 };
 
-export default withContext(GridTemplate);
+const mapStateToProps = ({ isLoading }) => ({
+  isLoading,
+});
+
+export default connect(mapStateToProps)(withContext(GridTemplate));
