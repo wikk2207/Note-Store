@@ -7,5 +7,5 @@ export const apiPaths = {
   getAllNotes: `${apiUrl}/notes`,
   getAllNotesOfOneType: `${apiUrl}/notes/type`,
   getSingleNote: `${apiUrl}/note`,
-  removeItem: `${apiUrl}/note`,
+  removeNote: `${apiUrl}/note`,
 };

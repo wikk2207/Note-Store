@@ -1,4 +1,10 @@
-import { ADD_ITEM, REMOVE_ITEM_SUCCESS, AUTH_SUCCESS, FETCH_REQUEST, FETCH_SUCCESS } from 'actions';
+import {
+  ADD_ITEM_SUCCESS,
+  REMOVE_ITEM_SUCCESS,
+  AUTH_SUCCESS,
+  FETCH_REQUEST,
+  FETCH_SUCCESS,
+} from 'actions';
 
 const initialState = {
   userID: '5f95b722f12b99003fbdf961', // in future save it in localStorage or use Redux Persist
@@ -23,10 +29,10 @@ const rootReducer = (state = initialState, action) => {
         ...state,
         userID: action.payload.data._id,
       };
-    case ADD_ITEM:
+    case ADD_ITEM_SUCCESS:
       return {
         ...state,
-        [action.payload.itemType]: [...state[action.payload.itemType], action.payload.item],
+        [action.payload.itemType]: [...state[action.payload.itemType], action.payload.data],
       };
     case REMOVE_ITEM_SUCCESS:
       return {

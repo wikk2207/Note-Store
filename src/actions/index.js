@@ -1,7 +1,10 @@
 import axios from 'axios';
+import moment from 'moment';
 import { apiPaths } from 'config/apiConfig';
 
-export const ADD_ITEM = 'ADD_ITEM';
+export const ADD_ITEM_REQUEST = 'ADD_ITEM_REQUEST';
+export const ADD_ITEM_SUCCESS = 'ADD_ITEM_SUCCESS';
+export const ADD_ITEM_FAILURE = 'ADD_ITEM_FAILURE';
 
 export const REMOVE_ITEM_REQUEST = 'REMOVE_ITEM_REQUEST';
 export const REMOVE_ITEM_SUCCESS = 'REMOVE_ITEM_SUCCESS';
@@ -60,7 +63,7 @@ export const removeItem = (itemType, id) => (dispatch) => {
   dispatch({ type: REMOVE_ITEM_REQUEST });
 
   axios
-    .delete(`${apiPaths.removeItem}/${id}`)
+    .delete(`${apiPaths.removeNote}/${id}`)
     .then(() => {
       dispatch({
         type: REMOVE_ITEM_SUCCESS,
@@ -78,17 +81,30 @@ export const removeItem = (itemType, id) => (dispatch) => {
     });
 };
 
-export const addItem = (itemType, itemContent) => {
-  const getId = () => `_${Math.random().toString(36).substr(2, 9)}`;
+export const addItem = (itemType, itemContent) => (dispatch, getState) => {
+  dispatch({ type: ADD_ITEM_REQUEST });
+  const creationTime = moment().format('LLL');
 
-  return {
-    type: ADD_ITEM,
-    payload: {
-      itemType,
-      item: {
-        id: getId(),
-        ...itemContent,
-      },
-    },
-  };
+  axios
+    .post(apiPaths.addNote, {
+      userID: getState().userID,
+      type: itemType,
+      created: creationTime,
+      ...itemContent,
+    })
+    .then(({ data }) => {
+      dispatch({
+        type: ADD_ITEM_SUCCESS,
+        payload: {
+          itemType,
+          data,
+        },
+      });
+    })
+    .catch((err) => {
+      console.log(err);
+      dispatch({
+        type: ADD_ITEM_FAILURE,
+      });
+    });
 };
