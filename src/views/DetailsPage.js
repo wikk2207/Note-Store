@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import axios from 'axios';
 import DetailsTemplate from 'templates/DetailsTemplate';
 import withContext from 'hoc/withContext';
+import { apiPaths } from 'config/apiConfig';
 
 class DetailsPage extends Component {
   constructor() {
@@ -32,7 +33,7 @@ class DetailsPage extends Component {
         },
       } = this.props;
       axios
-        .get(`http://localhost:9000/api/note/${id}`)
+        .get(`${apiPaths.getSingleNote}/${id}`)
         .then(({ data }) => {
           this.setState({ activeItem: data });
         })
