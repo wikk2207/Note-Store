@@ -1,26 +1,90 @@
-import React from 'react';
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
+import axios from 'axios';
 import DetailsTemplate from 'templates/DetailsTemplate';
 import withContext from 'hoc/withContext';
-import connect from 'react-redux';
 
-const dummyArticle = {
-  id: 1,
-  title: 'Wake me up when Vue ends',
-  content:
-    'Lorem ipsum dolor sit amet consectetur adipisicing elit. Delectus, tempora quibusdam natus modi tempore esse adipisci, dolore odit animi',
-  twitterName: 'hello_roman',
-  articleUrl: 'https://youtube.com/helloroman',
-  created: '1 day',
+class DetailsPage extends Component {
+  constructor() {
+    super();
+
+    this.state = {
+      activeItem: {
+        title: '',
+        content: '',
+        articleUrl: '',
+        twitterName: '',
+        created: '',
+      },
+    };
+  }
+
+  componentDidMount() {
+    const { activeItem: activeItemTable } = this.props;
+    if (activeItemTable) {
+      const [activeItem] = activeItemTable;
+      this.setState({ activeItem });
+    } else {
+      const {
+        match: {
+          params: { id },
+        },
+      } = this.props;
+      axios
+        .get(`http://localhost:9000/api/note/${id}`)
+        .then(({ data }) => {
+          this.setState({ activeItem: data });
+        })
+        .catch((err) => console.log(err));
+    }
+  }
+
+  render() {
+    const { activeItem: item } = this.state;
+
+    return (
+      <DetailsTemplate
+        title={item.title}
+        created={item.created}
+        content={item.content}
+        articleUrl={item.articleUrl}
+        twitterName={item.twitterName}
+      />
+    );
+  }
+}
+
+DetailsPage.propTypes = {
+  activeItem: PropTypes.arrayOf(
+    PropTypes.shape({
+      title: PropTypes.string.isRequired,
+      created: PropTypes.string.isRequired,
+      content: PropTypes.string.isRequired,
+      articleUrl: PropTypes.string,
+      twitterName: PropTypes.string,
+    }),
+  ),
+  match: PropTypes.shape({
+    params: PropTypes.shape({
+      id: PropTypes.string.isRequired,
+    }),
+  }).isRequired,
 };
 
-const DetailsPage = () => (
-  <DetailsTemplate
-    title={dummyArticle.title}
-    created={dummyArticle.created}
-    content={dummyArticle.content}
-    articleUrl={dummyArticle.articleUrl}
-    twitterName={dummyArticle.twitterName}
-  />
-);
+DetailsPage.defaultProps = {
+  activeItem: null,
+};
 
-export default withContext(DetailsPage);
+const mapStateToProps = (state, ownProps) => {
+  if (state[ownProps.pageContext]) {
+    return {
+      activeItem: state[ownProps.pageContext].filter(
+        (item) => item._id === ownProps.match.params.id,
+      ),
+    };
+  }
+  return {};
+};
+
+export default withContext(connect(mapStateToProps)(DetailsPage));
