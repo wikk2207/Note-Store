@@ -1,7 +1,9 @@
 // import { ADD_ITEM, REMOVE_ITEM, AUTH_REQUEST, AUTH_SUCCESS, AUTH_FAILURE } from 'actions';
 import { ADD_ITEM, REMOVE_ITEM, AUTH_SUCCESS, FETCH_SUCCESS } from 'actions';
 
-const initialState = {};
+const initialState = {
+  userID: '5f95b722f12b99003fbdf961', // in future save it in localStorage
+};
 
 const rootReducer = (state = initialState, action) => {
   switch (action.type) {
