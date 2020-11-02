@@ -20,7 +20,7 @@ const StyledWrapper = styled.div`
   background-color: white;
   z-index: 9999;
   padding: 100px 90px;
-  border-left: 10px solid ${({ activeColor, theme }) => theme[activeColor]};
+  border-left: 10px solid ${({ activecolor, theme }) => theme[activecolor]};
   box-shadow: -5px 0 15px rgba(0, 0, 0, 0.1);
   transform: translate(${({ isVisible }) => (isVisible ? '0' : '100%')});
   transition: transform 0.25s ease-in-out;
@@ -42,10 +42,10 @@ const StyledForm = styled(Form)`
 `;
 
 const NewItemBar = ({ pageContext, isVisible, addItem, handleClose }) => (
-  <StyledWrapper isVisible={isVisible} activeColor={pageContext}>
+  <StyledWrapper isVisible={isVisible} activecolor={pageContext}>
     <Heading>{`Create new ${pageContext}`}</Heading>
     <Formik
-      initialValues={{ title: '', content: '', articleUrl: '', twitterName: '', created: '' }}
+      initialValues={{ title: '', content: '', articleUrl: '', twitterName: '' }}
       onSubmit={(values) => {
         addItem(pageContext, values);
         handleClose();

@@ -1,13 +1,15 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import { Link, Redirect } from 'react-router-dom';
+import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { Formik, Form } from 'formik';
+import { routes } from 'routes';
 import AuthTemplate from 'templates/AuthTemplate';
-import Heading from 'components/atoms/Heading/Heading';
 import Input from 'components/atoms/Input/Input';
 import Button from 'components/atoms/Button/Button';
-import { Link } from 'react-router-dom';
-import { routes } from 'routes';
-import PropTypes from 'prop-types';
+import Heading from 'components/atoms/Heading/Heading';
+import { authenticate as authenticateAction } from 'actions';
 
 const StyledForm = styled(Form)`
   display: flex;
@@ -62,46 +64,52 @@ class AuthPage extends Component {
 
   render() {
     const { authType } = this.state;
+    const { userID, authenticate } = this.props;
 
     return (
       <AuthTemplate>
         <Formik
           initialValues={{ username: '', password: '' }}
           onSubmit={({ username, password }) => {
-            console.log('hello');
+            authenticate(username, password);
           }}
         >
-          {({ handleChange, handleBlur, values }) => (
-            <>
-              <Heading>{authType === 'login' ? 'Sign in' : 'Register'}</Heading>
-              <StyledForm>
-                <StyledInput
-                  type="text"
-                  name="username"
-                  placeholder="Login"
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  value={values.title}
-                />
-                <StyledInput
-                  type="password"
-                  name="password"
-                  placeholder="Password"
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  value={values.title}
-                />
-                <Button activecolor="notes" type="submit">
-                  {authType === 'login' ? 'sign in' : 'register'}
-                </Button>
-              </StyledForm>
-              {authType === 'login' ? (
-                <StyledLink to={routes.register}>I want my account!</StyledLink>
-              ) : (
-                <StyledLink to={routes.login}>I want to log in!</StyledLink>
-              )}
-            </>
-          )}
+          {({ handleChange, handleBlur, values }) => {
+            if (userID) {
+              return <Redirect to={routes.home} />;
+            }
+            return (
+              <>
+                <Heading>{authType === 'login' ? 'Sign in' : 'Register'}</Heading>
+                <StyledForm>
+                  <StyledInput
+                    type="text"
+                    name="username"
+                    placeholder="Login"
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    value={values.title}
+                  />
+                  <StyledInput
+                    type="password"
+                    name="password"
+                    placeholder="Password"
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    value={values.title}
+                  />
+                  <Button activecolor="notes" type="submit">
+                    {authType === 'login' ? 'sign in' : 'register'}
+                  </Button>
+                </StyledForm>
+                {authType === 'login' ? (
+                  <StyledLink to={routes.register}>I want my account!</StyledLink>
+                ) : (
+                  <StyledLink to={routes.login}>I want to log in!</StyledLink>
+                )}
+              </>
+            );
+          }}
         </Formik>
       </AuthTemplate>
     );
@@ -112,6 +120,18 @@ AuthPage.propTypes = {
   location: PropTypes.shape({
     pathname: PropTypes.string.isRequired,
   }).isRequired,
+  authenticate: PropTypes.func.isRequired,
+  userID: PropTypes.string,
 };
 
-export default AuthPage;
+AuthPage.defaultProps = {
+  userID: null,
+};
+
+const mapStateToProps = ({ userID = null }) => ({ userID });
+
+const mapDispatchToProps = (dispatch) => ({
+  authenticate: (username, password) => dispatch(authenticateAction(username, password)),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(AuthPage);

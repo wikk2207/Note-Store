@@ -43,7 +43,7 @@ const AuthTemplate = ({ children }) => (
 );
 
 AuthTemplate.propTypes = {
-  children: PropTypes.arrayOf(PropTypes.object).isRequired,
+  children: PropTypes.element.isRequired,
 };
 
 export default withRouter(AuthTemplate);
