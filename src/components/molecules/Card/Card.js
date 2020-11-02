@@ -29,7 +29,7 @@ const StyledWrapper = styled.div`
 const InnerWrapper = styled.div`
   position: relative;
   padding: 17px 30px;
-  background-color: ${({ activeColor, theme }) => (activeColor ? theme[activeColor] : 'white')};
+  background-color: ${({ activecolor, theme }) => (activecolor ? theme[activecolor] : 'white')};
 
   :first-of-type {
     z-index: 9999;
@@ -106,7 +106,7 @@ class Card extends Component {
 
     return (
       <StyledWrapper onClick={this.handleCardClick}>
-        <InnerWrapper activeColor={pageContext}>
+        <InnerWrapper activecolor={pageContext}>
           <StyledHeading>{title}</StyledHeading>
           <DateInfo>{created}</DateInfo>
           {pageContext === CARD_TYPE.twitters && (
