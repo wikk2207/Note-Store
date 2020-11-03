@@ -1,8 +1,11 @@
 # Note-Store
 
-<img src="./src/assets/icons/logo.png" width="80">
-
-The Note Store is a React app that stores notes of 3 types: standard, twitters, articles.
+<table>
+<tr>
+<td> <img src="./src/assets/icons/logo.png"></td>
+<td>The Note Store is a React app that stores notes of 3 types: standard, twitters, articles.</td>
+</tr>
+</table>
 
 ## Tools, Technologies
 
