@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import { Link, Redirect } from 'react-router-dom';
 import PropTypes from 'prop-types';
@@ -10,6 +10,9 @@ import Input from 'components/atoms/Input/Input';
 import Button from 'components/atoms/Button/Button';
 import Heading from 'components/atoms/Heading/Heading';
 import { authenticate as authenticateAction } from 'actions';
+import { useAlert } from 'react-alert';
+import axios from 'axios';
+import { apiPaths } from 'config/apiConfig';
 
 const StyledForm = styled(Form)`
   display: flex;
@@ -33,88 +36,95 @@ const StyledLink = styled(Link)`
   margin: 20px 0 50px;
 `;
 
-class AuthPage extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      authType: 'login',
-    };
-  }
+const AuthPage = (props) => {
+  const [authType, setAuthType] = useState('login');
+  const { userID, authenticate } = props;
+  const alert = useAlert();
 
-  componentDidMount() {
-    this.setCurrentPage();
-  }
-
-  componentDidUpdate(prevProps, prevState) {
-    this.setCurrentPage(prevState);
-  }
-
-  setCurrentPage = (prevState = '') => {
+  const setCurrentPage = () => {
     const authTypes = ['login', 'register'];
     const {
       location: { pathname },
-    } = this.props;
+    } = props;
 
     const [currentPage] = authTypes.filter((page) => pathname.includes(page));
 
-    if (prevState.authType !== currentPage) {
-      this.setState({ authType: currentPage });
+    if (authType !== currentPage) {
+      setAuthType(currentPage);
     }
   };
 
-  render() {
-    const { authType } = this.state;
-    const { userID, authenticate } = this.props;
+  useEffect(() => {
+    setCurrentPage();
+  });
 
-    return (
-      <AuthTemplate>
-        <Formik
-          initialValues={{ username: '', password: '' }}
-          onSubmit={({ username, password }) => {
-            authenticate(username, password);
-          }}
-        >
-          {({ handleChange, handleBlur, values }) => {
-            if (userID) {
-              return <Redirect to={routes.home} />;
-            }
-            return (
-              <>
-                <Heading>{authType === 'login' ? 'Sign in' : 'Register'}</Heading>
-                <StyledForm>
-                  <StyledInput
-                    type="text"
-                    name="username"
-                    placeholder="Login"
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                    value={values.title}
-                  />
-                  <StyledInput
-                    type="password"
-                    name="password"
-                    placeholder="Password"
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                    value={values.title}
-                  />
-                  <Button activecolor="notes" type="submit">
-                    {authType === 'login' ? 'sign in' : 'register'}
-                  </Button>
-                </StyledForm>
-                {authType === 'login' ? (
-                  <StyledLink to={routes.register}>I want my account!</StyledLink>
-                ) : (
-                  <StyledLink to={routes.login}>I want to log in!</StyledLink>
-                )}
-              </>
-            );
-          }}
-        </Formik>
-      </AuthTemplate>
-    );
-  }
-}
+  const handleRegister = (username, password, resetForm) => {
+    axios
+      .post(apiPaths.register, {
+        username,
+        password,
+      })
+      .then((response) => {
+        if (response.status === 201) {
+          alert.show('Successfully created new account. You can now sign in.', { type: 'success' });
+          resetForm();
+        }
+      })
+      .catch((err) => {
+        alert.show('Something went wrong!', { type: 'error' });
+      });
+  };
+
+  return (
+    <AuthTemplate>
+      <Formik
+        initialValues={{ username: '', password: '' }}
+        onSubmit={({ username, password }, { resetForm }) => {
+          authType === 'login'
+            ? authenticate(username, password)
+            : handleRegister(username, password, () => resetForm());
+        }}
+      >
+        {({ handleChange, handleBlur, values }) => {
+          if (userID) {
+            return <Redirect to={routes.home} />;
+          }
+          return (
+            <>
+              <Heading>{authType === 'login' ? 'Sign in' : 'Register'}</Heading>
+              <StyledForm>
+                <StyledInput
+                  type="text"
+                  name="username"
+                  placeholder="Login"
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  value={values.username}
+                />
+                <StyledInput
+                  type="password"
+                  name="password"
+                  placeholder="Password"
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  value={values.password}
+                />
+                <Button activecolor="notes" type="submit">
+                  {authType === 'login' ? 'sign in' : 'register'}
+                </Button>
+              </StyledForm>
+              {authType === 'login' ? (
+                <StyledLink to={routes.register}>I want my account!</StyledLink>
+              ) : (
+                <StyledLink to={routes.login}>I want to log in!</StyledLink>
+              )}
+            </>
+          );
+        }}
+      </Formik>
+    </AuthTemplate>
+  );
+};
 
 AuthPage.propTypes = {
   location: PropTypes.shape({
