@@ -10,6 +10,9 @@ import Input from 'components/atoms/Input/Input';
 import Button from 'components/atoms/Button/Button';
 import Heading from 'components/atoms/Heading/Heading';
 import { authenticate as authenticateAction } from 'actions';
+import { useAlert } from 'react-alert';
+import axios from 'axios';
+import { apiPaths } from 'config/apiConfig';
 
 const StyledForm = styled(Form)`
   display: flex;
@@ -36,6 +39,7 @@ const StyledLink = styled(Link)`
 const AuthPage = (props) => {
   const [authType, setAuthType] = useState('login');
   const { userID, authenticate } = props;
+  const alert = useAlert();
 
   const setCurrentPage = () => {
     const authTypes = ['login', 'register'];
@@ -54,12 +58,31 @@ const AuthPage = (props) => {
     setCurrentPage();
   });
 
+  const handleRegister = (username, password, resetForm) => {
+    axios
+      .post(apiPaths.register, {
+        username,
+        password,
+      })
+      .then((response) => {
+        if (response.status === 201) {
+          alert.show('Successfully created new account. You can now sign in.', { type: 'success' });
+          resetForm();
+        }
+      })
+      .catch((err) => {
+        alert.show('Something went wrong!', { type: 'error' });
+      });
+  };
+
   return (
     <AuthTemplate>
       <Formik
         initialValues={{ username: '', password: '' }}
-        onSubmit={({ username, password }) => {
-          authenticate(username, password);
+        onSubmit={({ username, password }, { resetForm }) => {
+          authType === 'login'
+            ? authenticate(username, password)
+            : handleRegister(username, password, () => resetForm());
         }}
       >
         {({ handleChange, handleBlur, values }) => {
@@ -76,7 +99,7 @@ const AuthPage = (props) => {
                   placeholder="Login"
                   onChange={handleChange}
                   onBlur={handleBlur}
-                  value={values.title}
+                  value={values.username}
                 />
                 <StyledInput
                   type="password"
@@ -84,7 +107,7 @@ const AuthPage = (props) => {
                   placeholder="Password"
                   onChange={handleChange}
                   onBlur={handleBlur}
-                  value={values.title}
+                  value={values.password}
                 />
                 <Button activecolor="notes" type="submit">
                   {authType === 'login' ? 'sign in' : 'register'}
