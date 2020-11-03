@@ -2,7 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
 import Heading from 'components/atoms/Heading/Heading';
-import logoIcon from 'assets/icons/logo.svg';
+import logoIcon from 'assets/icons/logo.png';
 import { withRouter } from 'react-router';
 
 const StyledWrapper = styled.div`

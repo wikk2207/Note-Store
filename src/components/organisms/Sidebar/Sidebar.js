@@ -7,7 +7,7 @@ import bulbIcon from 'assets/icons/bulb.svg';
 import logoutIcon from 'assets/icons/logout.svg';
 import penIcon from 'assets/icons/pen.svg';
 import twitterIcon from 'assets/icons/twitter.svg';
-import logoIcon from 'assets/icons/logo.svg';
+import logoIcon from 'assets/icons/logo.png';
 import { routes } from 'routes';
 import withContext from 'hoc/withContext';
 
@@ -27,8 +27,8 @@ const StyledWrapper = styled.nav`
 
 const StyledLogoLink = styled(NavLink)`
   display: block;
-  width: 67px;
-  height: 67px;
+  width: 120px;
+  height: 70px;
   background-image: url(${logoIcon});
   background-repeat: no-repeat;
   background-position: 50% 50%;

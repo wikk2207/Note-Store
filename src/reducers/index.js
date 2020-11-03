@@ -7,7 +7,7 @@ import {
 } from 'actions';
 
 const initialState = {
-  userID: '5f95b722f12b99003fbdf961', // in future save it in localStorage or use Redux Persist
+  // userID: '5f95b722f12b99003fbdf961', // in future save it in localStorage or use Redux Persist
   isLoading: false,
 };
 
