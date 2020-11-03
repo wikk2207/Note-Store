@@ -1,6 +1,8 @@
-# Fav-Note
+# Note-Store
 
-The Fav Note is a React app that stores notes of 3 types: standard, twitters, articles.
+<img src="./src/assets/icons/logo.png" width="80">
+
+The Note Store is a React app that stores notes of 3 types: standard, twitters, articles.
 
 ## Tools, Technologies
 

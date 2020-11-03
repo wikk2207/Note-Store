@@ -1,5 +1,5 @@
 {
-  "name": "fav-note",
+  "name": "note-store",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
