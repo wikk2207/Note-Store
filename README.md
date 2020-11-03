@@ -19,6 +19,7 @@
   <p> <img src="./public/readme/storybook.png" height="30"> Storybook </p>
   <p> <img src="./public/readme/redux.svg" height="30"> Redux </p>
   <p> <img src="./public/readme/formik.png" height="30"> Formik </p>
+  <p> <img src="./public/readme/octopus.png" height="30"> React Testing Library </p>
 
 ## Good practices
 

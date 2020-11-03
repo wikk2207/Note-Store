@@ -50,7 +50,7 @@ const StyledImg = styled.img`
 
 const Alert = ({ style, options: { type }, message, close }) => (
   <StyledWrapper type={type} style={style}>
-    <StyledImg alt="" src={alertIcon[type]} />
+    <StyledImg alt={type} src={alertIcon[type]} />
     <StyledParagraph>{message}</StyledParagraph>
 
     <StyledButton type="button" onClick={close}>

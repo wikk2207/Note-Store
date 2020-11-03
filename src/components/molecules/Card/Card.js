@@ -110,9 +110,14 @@ class Card extends Component {
           <StyledHeading>{title}</StyledHeading>
           <DateInfo>{created}</DateInfo>
           {pageContext === CARD_TYPE.twitters && (
-            <StyledAvatar src={`https://unavatar.now.sh/twitter/${twitterName}`} />
+            <StyledAvatar
+              data-testid="twitterAvatar"
+              src={`https://unavatar.now.sh/twitter/${twitterName}`}
+            />
           )}
-          {pageContext === CARD_TYPE.articles && <StyledLinkButton href={articleUrl} />}
+          {pageContext === CARD_TYPE.articles && (
+            <StyledLinkButton data-testid="articleLink" href={articleUrl} />
+          )}
         </InnerWrapper>
         <InnerWrapper flex>
           <Paragraph>{content}</Paragraph>
