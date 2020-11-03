@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import { Link, Redirect } from 'react-router-dom';
 import PropTypes from 'prop-types';
@@ -33,88 +33,75 @@ const StyledLink = styled(Link)`
   margin: 20px 0 50px;
 `;
 
-class AuthPage extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      authType: 'login',
-    };
-  }
+const AuthPage = (props) => {
+  const [authType, setAuthType] = useState('login');
+  const { userID, authenticate } = props;
 
-  componentDidMount() {
-    this.setCurrentPage();
-  }
-
-  componentDidUpdate(prevProps, prevState) {
-    this.setCurrentPage(prevState);
-  }
-
-  setCurrentPage = (prevState = '') => {
+  const setCurrentPage = () => {
     const authTypes = ['login', 'register'];
     const {
       location: { pathname },
-    } = this.props;
+    } = props;
 
     const [currentPage] = authTypes.filter((page) => pathname.includes(page));
 
-    if (prevState.authType !== currentPage) {
-      this.setState({ authType: currentPage });
+    if (authType !== currentPage) {
+      setAuthType(currentPage);
     }
   };
 
-  render() {
-    const { authType } = this.state;
-    const { userID, authenticate } = this.props;
+  useEffect(() => {
+    setCurrentPage();
+  });
 
-    return (
-      <AuthTemplate>
-        <Formik
-          initialValues={{ username: '', password: '' }}
-          onSubmit={({ username, password }) => {
-            authenticate(username, password);
-          }}
-        >
-          {({ handleChange, handleBlur, values }) => {
-            if (userID) {
-              return <Redirect to={routes.home} />;
-            }
-            return (
-              <>
-                <Heading>{authType === 'login' ? 'Sign in' : 'Register'}</Heading>
-                <StyledForm>
-                  <StyledInput
-                    type="text"
-                    name="username"
-                    placeholder="Login"
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                    value={values.title}
-                  />
-                  <StyledInput
-                    type="password"
-                    name="password"
-                    placeholder="Password"
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                    value={values.title}
-                  />
-                  <Button activecolor="notes" type="submit">
-                    {authType === 'login' ? 'sign in' : 'register'}
-                  </Button>
-                </StyledForm>
-                {authType === 'login' ? (
-                  <StyledLink to={routes.register}>I want my account!</StyledLink>
-                ) : (
-                  <StyledLink to={routes.login}>I want to log in!</StyledLink>
-                )}
-              </>
-            );
-          }}
-        </Formik>
-      </AuthTemplate>
-    );
-  }
-}
+  return (
+    <AuthTemplate>
+      <Formik
+        initialValues={{ username: '', password: '' }}
+        onSubmit={({ username, password }) => {
+          authenticate(username, password);
+        }}
+      >
+        {({ handleChange, handleBlur, values }) => {
+          if (userID) {
+            return <Redirect to={routes.home} />;
+          }
+          return (
+            <>
+              <Heading>{authType === 'login' ? 'Sign in' : 'Register'}</Heading>
+              <StyledForm>
+                <StyledInput
+                  type="text"
+                  name="username"
+                  placeholder="Login"
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  value={values.title}
+                />
+                <StyledInput
+                  type="password"
+                  name="password"
+                  placeholder="Password"
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  value={values.title}
+                />
+                <Button activecolor="notes" type="submit">
+                  {authType === 'login' ? 'sign in' : 'register'}
+                </Button>
+              </StyledForm>
+              {authType === 'login' ? (
+                <StyledLink to={routes.register}>I want my account!</StyledLink>
+              ) : (
+                <StyledLink to={routes.login}>I want to log in!</StyledLink>
+              )}
+            </>
+          );
+        }}
+      </Formik>
+    </AuthTemplate>
+  );
+};
 
 AuthPage.propTypes = {
   location: PropTypes.shape({
