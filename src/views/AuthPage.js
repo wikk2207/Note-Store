@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { connect } from 'react-redux';
 import { Link, Redirect } from 'react-router-dom';
 import PropTypes from 'prop-types';
@@ -6,7 +6,7 @@ import styled from 'styled-components';
 import { Formik, Form } from 'formik';
 import { routes } from 'routes';
 import AuthTemplate from 'templates/AuthTemplate';
-import Input from 'components/atoms/Input/Input';
+import ValidationInput from 'components/molecules/ValidationInput/ValidationInput';
 import Button from 'components/atoms/Button/Button';
 import Heading from 'components/atoms/Heading/Heading';
 import { authenticate as authenticateAction } from 'actions';
@@ -23,10 +23,9 @@ const StyledForm = styled(Form)`
   flex-direction: column;
 `;
 
-const StyledInput = styled(Input)`
-  margin: 0 0 30px 0;
-  height: 40px;
+const StyledInput = styled(ValidationInput)`
   width: 300px;
+  height: 40px;
 `;
 
 const StyledLink = styled(Link)`
@@ -42,6 +41,7 @@ const AuthPage = (props) => {
   const [authType, setAuthType] = useState('login');
   const { userID, authenticate } = props;
   const alert = useAlert();
+  const formikRef = useRef();
 
   const setCurrentPage = () => {
     const authTypes = ['login', 'register'];
@@ -52,6 +52,7 @@ const AuthPage = (props) => {
     const [currentPage] = authTypes.filter((page) => pathname.includes(page));
 
     if (authType !== currentPage) {
+      formikRef.current.resetForm();
       setAuthType(currentPage);
     }
   };
@@ -98,6 +99,7 @@ const AuthPage = (props) => {
             ? authenticate(username, password)
             : handleRegister(username, password, () => resetForm());
         }}
+        innerRef={formikRef}
       >
         {({ handleChange, handleBlur, values, errors, touched }) => {
           if (userID) {
@@ -114,8 +116,8 @@ const AuthPage = (props) => {
                   onChange={handleChange}
                   onBlur={handleBlur}
                   value={values.username}
+                  errorMessage={touched.username ? errors.username : ''}
                 />
-                {touched.username && errors.username ? <div>{errors.username}</div> : null}
                 <StyledInput
                   type="password"
                   name="password"
@@ -123,8 +125,8 @@ const AuthPage = (props) => {
                   onChange={handleChange}
                   onBlur={handleBlur}
                   value={values.password}
+                  errorMessage={touched.password ? errors.password : ''}
                 />
-                {touched.password && errors.password ? <div>{errors.password}</div> : null}
                 <Button activecolor="notes" type="submit">
                   {authType === 'login' ? 'sign in' : 'register'}
                 </Button>
