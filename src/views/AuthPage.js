@@ -13,6 +13,8 @@ import { authenticate as authenticateAction } from 'actions';
 import { useAlert } from 'react-alert';
 import axios from 'axios';
 import { apiPaths } from 'config/apiConfig';
+import * as Yup from 'yup';
+import { validations } from 'utils/text/validations';
 
 const StyledForm = styled(Form)`
   display: flex;
@@ -75,17 +77,29 @@ const AuthPage = (props) => {
       });
   };
 
+  const validationSchema = Yup.object({
+    username: Yup.string()
+      .min(5, validations.min5Characters)
+      .max(20, validations.max20Characters)
+      .required(validations.required),
+    password: Yup.string()
+      .min(5, validations.min5Characters)
+      .max(20, validations.max20Characters)
+      .required(validations.required),
+  });
+
   return (
     <AuthTemplate>
       <Formik
         initialValues={{ username: '', password: '' }}
+        validationSchema={validationSchema}
         onSubmit={({ username, password }, { resetForm }) => {
           authType === 'login'
             ? authenticate(username, password)
             : handleRegister(username, password, () => resetForm());
         }}
       >
-        {({ handleChange, handleBlur, values }) => {
+        {({ handleChange, handleBlur, values, errors, touched }) => {
           if (userID) {
             return <Redirect to={routes.home} />;
           }
@@ -101,6 +115,7 @@ const AuthPage = (props) => {
                   onBlur={handleBlur}
                   value={values.username}
                 />
+                {touched.username && errors.username ? <div>{errors.username}</div> : null}
                 <StyledInput
                   type="password"
                   name="password"
@@ -109,6 +124,7 @@ const AuthPage = (props) => {
                   onBlur={handleBlur}
                   value={values.password}
                 />
+                {touched.password && errors.password ? <div>{errors.password}</div> : null}
                 <Button activecolor="notes" type="submit">
                   {authType === 'login' ? 'sign in' : 'register'}
                 </Button>
