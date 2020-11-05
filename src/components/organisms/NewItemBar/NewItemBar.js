@@ -3,11 +3,13 @@ import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { connect } from 'react-redux';
 import { Formik, Form } from 'formik';
-import Input from 'components/atoms/Input/Input';
 import Button from 'components/atoms/Button/Button';
 import Heading from 'components/atoms/Heading/Heading';
 import withContext from 'hoc/withContext';
 import { addItem as addItemAction } from 'actions';
+import * as Yup from 'yup';
+import { validations } from 'utils/text/validations';
+import ValidationInput from 'components/molecules/ValidationInput/ValidationInput';
 
 const StyledWrapper = styled.div`
   position: fixed;
@@ -26,13 +28,16 @@ const StyledWrapper = styled.div`
   transition: transform 0.25s ease-in-out;
 `;
 
-const StyledTextArea = styled(Input)`
-  margin: 30px 0 100px;
+const StyledTextArea = styled(ValidationInput)`
   border-radius: 20px;
   height: 30vh;
 `;
 
-const StyledInput = styled(Input)`
+const StyledTextAreaWrapper = styled.div`
+  margin: 30px 0 100px;
+`;
+
+const StyledInput = styled(ValidationInput)`
   margin-top: 25px;
 `;
 
@@ -41,60 +46,81 @@ const StyledForm = styled(Form)`
   flex-direction: column;
 `;
 
-const NewItemBar = ({ pageContext, isVisible, addItem, handleClose }) => (
-  <StyledWrapper isVisible={isVisible} activecolor={pageContext}>
-    <Heading>{`Create new ${pageContext}`}</Heading>
-    <Formik
-      initialValues={{ title: '', content: '', articleUrl: '', twitterName: '' }}
-      onSubmit={(values) => {
-        addItem(pageContext, values);
-        handleClose();
-      }}
-    >
-      {({ values, handleChange, handleBlur }) => (
-        <StyledForm>
-          <StyledInput
-            placeholder="Title"
-            type="text"
-            name="title"
-            onChange={handleChange}
-            onBlur={handleBlur}
-            value={values.title}
-          />
-          {pageContext === 'articles' && (
+const NewItemBar = ({ pageContext, isVisible, addItem, handleClose }) => {
+  const validationSchema = Yup.object({
+    title: Yup.string().required(validations.required),
+    content: Yup.string().required(validations.required),
+    articleUrl:
+      pageContext === 'articles'
+        ? Yup.string().url(validations.url).required(validations.required)
+        : null,
+    twitterName: pageContext === 'twitters' ? Yup.string().required(validations.required) : null,
+  });
+
+  return (
+    <StyledWrapper isVisible={isVisible} activecolor={pageContext}>
+      <Heading>{`Create new ${pageContext}`}</Heading>
+      <Formik
+        initialValues={{ title: '', content: '', articleUrl: '', twitterName: '' }}
+        onSubmit={(values) => {
+          addItem(pageContext, values);
+          handleClose();
+        }}
+        validationSchema={validationSchema}
+      >
+        {({ values, handleChange, handleBlur, touched, errors }) => (
+          <StyledForm>
             <StyledInput
+              placeholder="Title"
               type="text"
-              name="articleUrl"
-              placeholder="link"
+              name="title"
               onChange={handleChange}
               onBlur={handleBlur}
-              value={values.articleUrl}
+              value={values.title}
+              errorMessage={touched.title ? errors.title : ''}
             />
-          )}
-          {pageContext === 'twitters' && (
-            <StyledInput
-              type="text"
-              name="twitterName"
-              placeholder="Account Name eg. hello_roman"
-              onChange={handleChange}
-              onBlur={handleBlur}
-              value={values.twitterName}
-            />
-          )}
-          <StyledTextArea
-            name="content"
-            as="textarea"
-            onChange={handleChange}
-            onBlur={handleBlur}
-            value={values.content}
-            placeholder="Description"
-          />
-          <Button type="submit">add note</Button>
-        </StyledForm>
-      )}
-    </Formik>
-  </StyledWrapper>
-);
+            {pageContext === 'articles' && (
+              <StyledInput
+                type="text"
+                name="articleUrl"
+                placeholder="link"
+                onChange={handleChange}
+                onBlur={handleBlur}
+                value={values.articleUrl}
+                errorMessage={touched.articleUrl ? errors.articleUrl : ''}
+              />
+            )}
+            {pageContext === 'twitters' && (
+              <StyledInput
+                type="text"
+                name="twitterName"
+                placeholder="Account Name eg. hello_roman"
+                onChange={handleChange}
+                onBlur={handleBlur}
+                value={values.twitterName}
+                errorMessage={touched.twitterName ? errors.twitterName : ''}
+              />
+            )}
+            <StyledTextAreaWrapper>
+              <StyledTextArea
+                type="text"
+                name="content"
+                onChange={handleChange}
+                onBlur={handleBlur}
+                value={values.content}
+                placeholder="Description"
+                errorMessage={touched.content ? errors.content : ''}
+                textarea
+              />
+            </StyledTextAreaWrapper>
+
+            <Button type="submit">add note</Button>
+          </StyledForm>
+        )}
+      </Formik>
+    </StyledWrapper>
+  );
+};
 
 NewItemBar.propTypes = {
   pageContext: PropTypes.oneOf(['notes', 'twitters', 'articles']),

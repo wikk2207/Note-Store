@@ -24,3 +24,4 @@
 ## Good practices
 
 - Atomic Design
+- Data Validation

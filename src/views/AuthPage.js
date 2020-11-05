@@ -1,18 +1,20 @@
-import React, { useEffect, useState } from 'react';
-import { connect } from 'react-redux';
-import { Link, Redirect } from 'react-router-dom';
+import React, { useEffect, useState, useRef } from 'react';
+import axios from 'axios';
+import * as Yup from 'yup';
 import PropTypes from 'prop-types';
-import styled from 'styled-components';
 import { Formik, Form } from 'formik';
+import { connect } from 'react-redux';
+import { useAlert } from 'react-alert';
+import styled from 'styled-components';
+import { Link, Redirect } from 'react-router-dom';
 import { routes } from 'routes';
+import { apiPaths } from 'config/apiConfig';
 import AuthTemplate from 'templates/AuthTemplate';
-import Input from 'components/atoms/Input/Input';
 import Button from 'components/atoms/Button/Button';
+import { validations } from 'utils/text/validations';
 import Heading from 'components/atoms/Heading/Heading';
 import { authenticate as authenticateAction } from 'actions';
-import { useAlert } from 'react-alert';
-import axios from 'axios';
-import { apiPaths } from 'config/apiConfig';
+import ValidationInput from 'components/molecules/ValidationInput/ValidationInput';
 
 const StyledForm = styled(Form)`
   display: flex;
@@ -21,10 +23,9 @@ const StyledForm = styled(Form)`
   flex-direction: column;
 `;
 
-const StyledInput = styled(Input)`
-  margin: 0 0 30px 0;
-  height: 40px;
+const StyledInput = styled(ValidationInput)`
   width: 300px;
+  height: 40px;
 `;
 
 const StyledLink = styled(Link)`
@@ -40,6 +41,7 @@ const AuthPage = (props) => {
   const [authType, setAuthType] = useState('login');
   const { userID, authenticate } = props;
   const alert = useAlert();
+  const formikRef = useRef();
 
   const setCurrentPage = () => {
     const authTypes = ['login', 'register'];
@@ -50,6 +52,7 @@ const AuthPage = (props) => {
     const [currentPage] = authTypes.filter((page) => pathname.includes(page));
 
     if (authType !== currentPage) {
+      formikRef.current.resetForm();
       setAuthType(currentPage);
     }
   };
@@ -75,17 +78,30 @@ const AuthPage = (props) => {
       });
   };
 
+  const validationSchema = Yup.object({
+    username: Yup.string()
+      .min(5, validations.min5Characters)
+      .max(20, validations.max20Characters)
+      .required(validations.required),
+    password: Yup.string()
+      .min(5, validations.min5Characters)
+      .max(20, validations.max20Characters)
+      .required(validations.required),
+  });
+
   return (
     <AuthTemplate>
       <Formik
         initialValues={{ username: '', password: '' }}
+        validationSchema={validationSchema}
         onSubmit={({ username, password }, { resetForm }) => {
           authType === 'login'
             ? authenticate(username, password)
             : handleRegister(username, password, () => resetForm());
         }}
+        innerRef={formikRef}
       >
-        {({ handleChange, handleBlur, values }) => {
+        {({ handleChange, handleBlur, values, errors, touched }) => {
           if (userID) {
             return <Redirect to={routes.home} />;
           }
@@ -100,6 +116,7 @@ const AuthPage = (props) => {
                   onChange={handleChange}
                   onBlur={handleBlur}
                   value={values.username}
+                  errorMessage={touched.username ? errors.username : ''}
                 />
                 <StyledInput
                   type="password"
@@ -108,6 +125,7 @@ const AuthPage = (props) => {
                   onChange={handleChange}
                   onBlur={handleBlur}
                   value={values.password}
+                  errorMessage={touched.password ? errors.password : ''}
                 />
                 <Button activecolor="notes" type="submit">
                   {authType === 'login' ? 'sign in' : 'register'}
