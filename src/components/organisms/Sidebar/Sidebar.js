@@ -10,6 +10,8 @@ import twitterIcon from 'assets/icons/twitter.svg';
 import logoIcon from 'assets/icons/logo.png';
 import { routes } from 'routes';
 import withContext from 'hoc/withContext';
+import { connect } from 'react-redux';
+import { logout as logoutAction } from 'actions';
 
 const StyledWrapper = styled.nav`
   position: fixed;
@@ -47,30 +49,42 @@ const StyledLinksList = styled.ul`
   list-style: none;
 `;
 
-const Sidebar = ({ pageContext }) => (
-  <StyledWrapper activecolor={pageContext}>
-    <StyledLogoLink to={routes.home} />
-    <StyledLinksList>
-      <li>
-        <ButtonIcon as={NavLink} to={routes.notes} icon={penIcon} activeclass="active" />
-      </li>
-      <li>
-        <ButtonIcon as={NavLink} to={routes.twitters} icon={twitterIcon} activeclass="active" />
-      </li>
-      <li>
-        <ButtonIcon as={NavLink} to={routes.articles} icon={bulbIcon} activeclass="active" />
-      </li>
-    </StyledLinksList>
-    <StyledLogoutButton as={NavLink} to={routes.login} icon={logoutIcon} />
-  </StyledWrapper>
-);
+const Sidebar = ({ pageContext, logout }) => {
+  return (
+    <StyledWrapper activecolor={pageContext}>
+      <StyledLogoLink to={routes.home} />
+      <StyledLinksList>
+        <li>
+          <ButtonIcon as={NavLink} to={routes.notes} icon={penIcon} activeclass="active" />
+        </li>
+        <li>
+          <ButtonIcon as={NavLink} to={routes.twitters} icon={twitterIcon} activeclass="active" />
+        </li>
+        <li>
+          <ButtonIcon as={NavLink} to={routes.articles} icon={bulbIcon} activeclass="active" />
+        </li>
+      </StyledLinksList>
+      <StyledLogoutButton
+        as={NavLink}
+        to={routes.login}
+        onClick={() => logout()}
+        icon={logoutIcon}
+      />
+    </StyledWrapper>
+  );
+};
 
 Sidebar.propTypes = {
   pageContext: PropTypes.oneOf(['notes', 'twitters', 'articles']),
+  logout: PropTypes.func.isRequired,
 };
 
 Sidebar.defaultProps = {
   pageContext: 'notes',
 };
 
-export default withContext(Sidebar);
+const mapDispatchToProps = (dispatch) => ({
+  logout: () => dispatch(logoutAction()),
+});
+
+export default connect(null, mapDispatchToProps)(withContext(Sidebar));

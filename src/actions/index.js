@@ -18,6 +18,8 @@ export const FETCH_REQUEST = 'FETCH_REQUEST';
 export const FETCH_SUCCESS = 'FETCH_SUCCESS';
 export const FETCH_FAILURE = 'FETCH_FAILURE';
 
+export const LOGOUT = 'LOGOUT';
+
 export const authenticate = (username, password) => (dispatch) => {
   dispatch({ type: AUTH_REQUEST });
   return axios
@@ -26,6 +28,8 @@ export const authenticate = (username, password) => (dispatch) => {
       password,
     })
     .then((payload) => {
+      localStorage.clear();
+      localStorage.userID = payload.data._id;
       dispatch({ type: AUTH_SUCCESS, payload });
     })
     .catch((err) => {
@@ -107,4 +111,12 @@ export const addItem = (itemType, itemContent) => (dispatch, getState) => {
         type: ADD_ITEM_FAILURE,
       });
     });
+};
+
+export const logout = () => (dispatch) => {
+  localStorage.clear();
+  dispatch({
+    type: LOGOUT,
+    payload: {},
+  });
 };
