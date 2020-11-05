@@ -1,20 +1,20 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { connect } from 'react-redux';
-import { Link, Redirect } from 'react-router-dom';
+import axios from 'axios';
+import * as Yup from 'yup';
 import PropTypes from 'prop-types';
-import styled from 'styled-components';
 import { Formik, Form } from 'formik';
+import { connect } from 'react-redux';
+import { useAlert } from 'react-alert';
+import styled from 'styled-components';
+import { Link, Redirect } from 'react-router-dom';
 import { routes } from 'routes';
+import { apiPaths } from 'config/apiConfig';
 import AuthTemplate from 'templates/AuthTemplate';
-import ValidationInput from 'components/molecules/ValidationInput/ValidationInput';
 import Button from 'components/atoms/Button/Button';
+import { validations } from 'utils/text/validations';
 import Heading from 'components/atoms/Heading/Heading';
 import { authenticate as authenticateAction } from 'actions';
-import { useAlert } from 'react-alert';
-import axios from 'axios';
-import { apiPaths } from 'config/apiConfig';
-import * as Yup from 'yup';
-import { validations } from 'utils/text/validations';
+import ValidationInput from 'components/molecules/ValidationInput/ValidationInput';
 
 const StyledForm = styled(Form)`
   display: flex;

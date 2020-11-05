@@ -11,22 +11,29 @@ const StyledParagraph = styled(Paragraph)`
   color: red;
 `;
 
+const StyledWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+`;
+
 const ValidationInput = (props) => {
-  const { errorMessage, ...inputProps } = props;
+  const { errorMessage, textarea, ...inputProps } = props;
   return (
-    <div>
-      <Input {...inputProps} />
+    <StyledWrapper>
+      <Input as={textarea ? 'textarea' : 'input'} {...inputProps} />
       <StyledParagraph>{errorMessage ? `*${errorMessage}` : ''}</StyledParagraph>
-    </div>
+    </StyledWrapper>
   );
 };
 
 ValidationInput.propTypes = {
   errorMessage: PropTypes.string,
+  textarea: PropTypes.bool,
 };
 
 ValidationInput.defaultProps = {
   errorMessage: '',
+  textarea: false,
 };
 
 export default ValidationInput;
