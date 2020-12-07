@@ -12,6 +12,7 @@ import { apiPaths } from 'config/apiConfig';
 import AuthTemplate from 'templates/AuthTemplate';
 import Button from 'components/atoms/Button/Button';
 import { validations } from 'utils/text/validations';
+import { apiResponses } from 'utils/text/apiResponses';
 import Heading from 'components/atoms/Heading/Heading';
 import { authenticate as authenticateAction } from 'actions';
 import ValidationInput from 'components/molecules/ValidationInput/ValidationInput';
@@ -69,12 +70,17 @@ const AuthPage = (props) => {
       })
       .then((response) => {
         if (response.status === 201) {
-          alert.show('Successfully created new account. You can now sign in.', { type: 'success' });
+          alert.show(apiResponses.registerSuccess, { type: 'success' });
           resetForm();
         }
       })
       .catch((err) => {
-        alert.show('Something went wrong!', { type: 'error' });
+        if (err.response.status === 409) {
+          alert.show(apiResponses.userConflict, { type: 'error' });
+        } else {
+          console.log(err);
+          alert.show(apiResponses.serverError, { type: 'error' });
+        }
       });
   };
 
@@ -96,7 +102,7 @@ const AuthPage = (props) => {
         validationSchema={validationSchema}
         onSubmit={({ username, password }, { resetForm }) => {
           authType === 'login'
-            ? authenticate(username, password)
+            ? authenticate(username, password, alert)
             : handleRegister(username, password, () => resetForm());
         }}
         innerRef={formikRef}
@@ -159,7 +165,8 @@ AuthPage.defaultProps = {
 const mapStateToProps = ({ userID = null }) => ({ userID });
 
 const mapDispatchToProps = (dispatch) => ({
-  authenticate: (username, password) => dispatch(authenticateAction(username, password)),
+  authenticate: (username, password, alert) =>
+    dispatch(authenticateAction(username, password, alert)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(AuthPage);

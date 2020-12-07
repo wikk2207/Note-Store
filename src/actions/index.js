@@ -1,6 +1,7 @@
 import axios from 'axios';
 import moment from 'moment';
 import { apiPaths } from 'config/apiConfig';
+import { apiResponses } from 'utils/text/apiResponses';
 
 export const ADD_ITEM_REQUEST = 'ADD_ITEM_REQUEST';
 export const ADD_ITEM_SUCCESS = 'ADD_ITEM_SUCCESS';
@@ -20,7 +21,7 @@ export const FETCH_FAILURE = 'FETCH_FAILURE';
 
 export const LOGOUT = 'LOGOUT';
 
-export const authenticate = (username, password) => (dispatch) => {
+export const authenticate = (username, password, alert) => (dispatch) => {
   dispatch({ type: AUTH_REQUEST });
   return axios
     .post(apiPaths.login, {
@@ -33,7 +34,12 @@ export const authenticate = (username, password) => (dispatch) => {
       dispatch({ type: AUTH_SUCCESS, payload });
     })
     .catch((err) => {
-      console.log(err);
+      if (err.response.status === 403) {
+        alert.show(apiResponses.invalidUser, { type: 'error' });
+      } else {
+        console.log(err);
+        alert.show(apiResponses.serverError, { type: 'error' });
+      }
       dispatch({ type: AUTH_FAILURE });
     });
 };
