@@ -62,9 +62,10 @@ const NewItemBar = ({ pageContext, isVisible, addItem, handleClose }) => {
       <Heading>{`Create new ${pageContext}`}</Heading>
       <Formik
         initialValues={{ title: '', content: '', articleUrl: '', twitterName: '' }}
-        onSubmit={(values) => {
+        onSubmit={(values, { resetForm }) => {
           addItem(pageContext, values);
           handleClose();
+          resetForm({});
         }}
         validationSchema={validationSchema}
       >
