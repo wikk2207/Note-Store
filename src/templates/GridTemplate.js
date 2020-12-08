@@ -81,18 +81,18 @@ class GridTemplate extends Component {
   };
 
   render() {
-    const { children, pageContext, isLoading } = this.props;
+    const { children, pageContext, isLoading, notesSize, handleChange } = this.props;
     const { isNewItemBarVisible } = this.state;
     return (
       <UserPageTemplate pageType={pageContext}>
         <StyledWrapper>
           {isLoading && <StyledLoadingIndicator>Loading</StyledLoadingIndicator>}
           <StyledPageHeader>
-            <Input search placeholder="Search" />
+            <Input search placeholder="Search" onChange={(e) => handleChange(e.target.value)} />
             <StyledHeading big as="h1">
               {pageContext}
             </StyledHeading>
-            <StyledParagraph>{`6 ${pageContext}`}</StyledParagraph>
+            <StyledParagraph>{`${notesSize} ${pageContext}`}</StyledParagraph>
           </StyledPageHeader>
           <StyledGrid>{children}</StyledGrid>
           <StyledButtonIcon
@@ -111,6 +111,8 @@ GridTemplate.propTypes = {
   children: PropTypes.arrayOf(PropTypes.object).isRequired,
   pageContext: PropTypes.oneOf(['notes', 'twitters', 'articles']),
   isLoading: PropTypes.bool.isRequired,
+  notesSize: PropTypes.number.isRequired,
+  handleChange: PropTypes.func.isRequired,
 };
 
 GridTemplate.defaultProps = {

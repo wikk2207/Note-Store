@@ -25,3 +25,15 @@
 
 - Atomic Design
 - Data Validation
+
+## How to run this app
+
+1. Run server (available [here](https://github.com/wikk2207/Note-Store-Backend))
+2. Run the application
+
+```
+npm install
+npm start
+```
+
+Then you can view Note Store in the browser: http://localhost:3000.

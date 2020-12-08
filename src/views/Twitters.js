@@ -6,25 +6,48 @@ import Card from 'components/molecules/Card/Card';
 import { fetchItems } from 'actions';
 
 class Twitters extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      searchedValue: '',
+    };
+  }
+
   componentDidMount() {
     const { fetchTwitters } = this.props;
     fetchTwitters();
   }
 
+  changeSearchedValue = (newValue) => {
+    this.setState({ searchedValue: newValue });
+  };
+
   render() {
     const { twitters } = this.props;
+    const { searchedValue } = this.state;
+
     return (
-      <GridTemplate pageType="twitters">
-        {twitters.map(({ title, content, twitterName, created, _id: id }) => (
-          <Card
-            id={id}
-            title={title}
-            content={content}
-            twitterName={twitterName}
-            created={created}
-            key={id}
-          />
-        ))}
+      <GridTemplate
+        pageType="twitters"
+        notesSize={twitters.length}
+        handleChange={this.changeSearchedValue}
+      >
+        {twitters
+          .filter(
+            (note) =>
+              note.title.toLowerCase().includes(searchedValue.toLowerCase()) ||
+              note.content.toLowerCase().includes(searchedValue.toLocaleLowerCase()),
+          )
+          .map(({ title, content, twitterName, created, _id: id }) => (
+            <Card
+              id={id}
+              title={title}
+              content={content}
+              twitterName={twitterName}
+              created={created}
+              key={id}
+            />
+          ))}
       </GridTemplate>
     );
   }

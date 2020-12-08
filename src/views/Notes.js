@@ -6,18 +6,41 @@ import Card from 'components/molecules/Card/Card';
 import { fetchItems } from 'actions';
 
 class Notes extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      searchedValue: '',
+    };
+  }
+
   componentDidMount() {
     const { fetchNotes } = this.props;
     fetchNotes();
   }
 
+  changeSearchedValue = (newValue) => {
+    this.setState({ searchedValue: newValue });
+  };
+
   render() {
     const { notes } = this.props;
+    const { searchedValue } = this.state;
+
     return (
-      <GridTemplate pageType="notes">
-        {notes.map(({ title, content, created, _id: id }) => (
-          <Card id={id} title={title} content={content} created={created} key={id} />
-        ))}
+      <GridTemplate
+        pageType="notes"
+        notesSize={notes.length}
+        handleChange={this.changeSearchedValue}
+      >
+        {notes
+          .filter(
+            (note) =>
+              note.title.toLowerCase().includes(searchedValue.toLowerCase()) ||
+              note.content.toLowerCase().includes(searchedValue.toLocaleLowerCase()),
+          )
+          .map(({ title, content, created, _id: id }) => (
+            <Card id={id} title={title} content={content} created={created} key={id} />
+          ))}
       </GridTemplate>
     );
   }
