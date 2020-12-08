@@ -66,7 +66,7 @@ const DetailsTemplate = ({ pageContext, title, created, content, articleUrl, twi
         <StyledImage alt={title} src={`https://unavatar.now.sh/twitter/${twitterName}`} />
       )}
       <Button as={Link} to={`/${pageContext}`} activecolor={pageContext}>
-        save / close
+        close
       </Button>
     </StyledWrapper>
   </UserPageTemplate>
